@@ -1,24 +1,35 @@
 {
 	"name": "react-360-product-viewer",
-	"version": "0.2.7",
+	"version": "0.3.0",
 	"description": "Showcase your products in this 360 viewer component.",
-	"main": "dist/index.js",
-	"module": "dist/index.esm.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/React360Viewer.js",
+	"files": ["dist"],
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/React360Viewer.d.ts",
+				"default": "./dist/React360Viewer.js"
+			},
+			"require": {
+				"types": "./dist/React360Viewer.d.cts",
+				"default": "./dist/React360Viewer.cjs"
+			}
+		}
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
-		"build-lib": "rollup --c",
-		"chromatic": "npx chromatic --project-token=11211ca7ece4",
-		"deploy-storybook": "storybook-to-ghpages"
+		"build": "tsup",
+		"deploy-storybook": "storybook-to-ghpages",
+		"prepare": "npm run build"
 	},
 	"keywords": ["react"],
-	"author": "Christian Klinton",
+	"author": "Devin Davies",
 	"license": "MIT",
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@chromatic-com/storybook": "^3.2.5",
 		"@storybook/addon-actions": "^8.6.4",
 		"@storybook/addon-essentials": "^8.6.4",
 		"@storybook/addon-interactions": "^8.6.4",
@@ -27,11 +38,11 @@
 		"@storybook/react": "^8.6.4",
 		"@storybook/react-webpack5": "^8.6.4",
 		"@storybook/storybook-deployer": "^2.8.16",
-		"chromatic": "^11.27.0",
 		"postcss": "^8.5.3",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"storybook": "^8.6.4"
+		"react": "^18.1.0",
+		"react-dom": "^18.1.0",
+		"storybook": "^8.6.4",
+		"tsup": "^8.4.0"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1",
@@ -43,10 +54,5 @@
 		"@types/react": "^18.3.18",
 		"styled-components": "^6.1.15",
 		"typescript": "^5.8.2"
-	},
-	"eslintConfig": {
-		"extends": "react-app",
-		"ignorePatterns": ["**/protos/*.ts"]
-	},
-	"files": ["dist/*.*"]
+	}
 }
