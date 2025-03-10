@@ -1,15 +1,13 @@
-import React from "react";
 import styled from "styled-components";
 
 interface ImageProps {
-  src: string;
-  isVisible: boolean;
-  width: number;
-  height: number;
+	src: string;
+	isVisible: boolean;
+	width: number;
+	height: number;
 }
 
-interface StyledImageProps {}
-const StyledImage = styled.img<StyledImageProps>`
+const StyledImage = styled.img`
   user-select: none;
   touch-action: none;
   cursor: inherit;
@@ -17,16 +15,16 @@ const StyledImage = styled.img<StyledImageProps>`
 `;
 
 const AnimationImage = ({ src, isVisible, width, height }: ImageProps) => {
-  let d = isVisible ? "block" : "none";
-  return (
-    <StyledImage
-      alt="Rotating object"
-      src={src}
-      width={width}
-      height={height}
-      style={{ display: `${d}` }}
-    ></StyledImage>
-  );
+	const d = isVisible ? "block" : "none";
+	return (
+		<StyledImage
+			alt="Rotating object"
+			src={src}
+			width={width}
+			height={height}
+			style={{ display: `${d}` }}
+		/>
+	);
 };
 
 export default AnimationImage;
