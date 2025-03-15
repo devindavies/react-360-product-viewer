@@ -3,7 +3,9 @@
 	"version": "0.4.0",
 	"description": "Showcase your products in this 360 viewer component.",
 	"main": "./dist/index.js",
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -26,7 +28,9 @@
 		"deploy-storybook": "storybook-to-ghpages",
 		"prepare": "npm run build"
 	},
-	"keywords": ["react"],
+	"keywords": [
+		"react"
+	],
 	"author": "Devin Davies",
 	"license": "MIT",
 	"devDependencies": {
@@ -40,6 +44,7 @@
 		"@storybook/react-webpack5": "^8.6.4",
 		"@storybook/test": "^8.6.4",
 		"@types/react": "^16.4.0",
+		"oxlint": "^0.15.15",
 		"postcss": "^8.5.3",
 		"react": "^16.4.0",
 		"react-dom": "^16.4.0",

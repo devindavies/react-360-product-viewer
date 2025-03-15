@@ -1,0 +1,23 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["import", "typescript", "unicorn", "react", "react-hooks"],
+
+	"env": {
+		"browser": true
+	},
+	"globals": {
+		"foo": "readonly"
+	},
+	"settings": {},
+	"rules": {
+		"react/exhaustive-deps": "error",
+		"eqeqeq": "warn",
+		"import/no-cycle": "error",
+		"react/self-closing-comp": [
+			"error",
+			{
+				"html": false
+			}
+		]
+	}
+}

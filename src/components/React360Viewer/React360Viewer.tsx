@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import AnimationImage from "../AnimationImage/AnimationImage";
 import StyledRotateIcon from "../icons/StyledRotateIcon";
@@ -13,8 +13,7 @@ function moduloWithoutNegative(value: number, n: number): number {
 export type ZeroPadRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export interface React360ViewerProps {
-	imagesCount: number;
-	imagesBaseUrl: string;
+	imageSources: { src: string; index: string }[];
 	imageIndexSeparator?: string;
 	imagesFiletype: string;
 	imageFilenamePrefix: string;
@@ -61,11 +60,7 @@ const StyledDiv = styled.div<StyleProps>`
 `;
 
 export const React360Viewer = ({
-	imagesCount,
-	imagesBaseUrl,
-	imageIndexSeparator,
-	imagesFiletype,
-	imageFilenamePrefix,
+	imageSources,
 	mouseDragSpeed = 20,
 	reverse = false,
 	autoplaySpeed = 10,
@@ -73,7 +68,6 @@ export const React360Viewer = ({
 	autoplayTarget,
 	width = 150,
 	height = 150,
-	zeroPad = 0,
 	showRotationIconOnStartup = false,
 	customRotationIcon,
 	imageInitialIndex = 0,
@@ -89,14 +83,30 @@ export const React360Viewer = ({
 		useState(0);
 	const [currentMousePosition, setCurrentMousePosition] = useState(0);
 	const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-	const [imageSources, setImageSources] = useState<
-		Array<{ src: string; index: string }>
-	>([]);
 
 	const [showRotationIcon, setShowRotationIcon] = useState(
 		showRotationIconOnStartup,
 	);
 	const [useAutoplay, setUseAutoplay] = useState(autoplay);
+
+	const incrementImageIndex = useCallback(
+		(change: number) => {
+			setSelectedImageIndex((currIndex) => {
+				const index = moduloWithoutNegative(
+					currIndex + (reverse ? -1 : 1) * Math.floor(change),
+					imageSources.length,
+				);
+
+				if (autoplayTarget !== undefined && index === autoplayTarget) {
+					setUseAutoplay(false);
+				}
+
+				return index;
+			});
+		},
+		[reverse, imageSources.length, autoplayTarget],
+	);
+
 	useEffect(() => {
 		setUseAutoplay(autoplay);
 
@@ -105,15 +115,15 @@ export const React360Viewer = ({
 
 	useEffect(() => {
 		if (typeof imageInitialIndex === "undefined") return;
-		if (imageInitialIndex < 0 || imageInitialIndex >= imagesCount) {
+		if (imageInitialIndex < 0 || imageInitialIndex >= imageSources.length) {
 			setSelectedImageIndex(imageInitialIndex);
 			console.warn(
-				`ImageInitialIndex of ${imageInitialIndex} was out of bounds of 0 and count: ${imagesCount}`,
+				`ImageInitialIndex of ${imageInitialIndex} was out of bounds of 0 and count: ${imageSources.length}`,
 			);
 		}
 
 		setSelectedImageIndex(imageInitialIndex);
-	}, [imageInitialIndex, imagesCount]);
+	}, [imageInitialIndex, imageSources.length]);
 
 	useEffect(() => {
 		if (!useAutoplay) return;
@@ -123,54 +133,7 @@ export const React360Viewer = ({
 		}, 1000 / autoplaySpeed);
 
 		return () => clearTimeout(timer);
-	});
-
-	const incrementImageIndex = (change: number) => {
-		const index = moduloWithoutNegative(
-			selectedImageIndex + (reverse ? -1 : 1) * Math.floor(change),
-			imagesCount,
-		);
-
-		setSelectedImageIndex(index);
-
-		if (autoplayTarget !== undefined && index === autoplayTarget) {
-			setUseAutoplay(false);
-		}
-	};
-
-	useEffect(() => {
-		function createImageSources() {
-			let baseUrl = "";
-
-			if (imageIndexSeparator !== undefined) {
-				baseUrl = imagesBaseUrl + imageIndexSeparator;
-			} else {
-				baseUrl = imagesBaseUrl.endsWith("/")
-					? imagesBaseUrl
-					: `${imagesBaseUrl}/`;
-			}
-
-			const srces: { src: string; index: string }[] = [];
-			const fileType = imagesFiletype.replace(".", "");
-			for (let i = 1; i <= imagesCount; i++) {
-				srces.push({
-					src: `${baseUrl}${imageFilenamePrefix ? imageFilenamePrefix : ""}${
-						zeroPad ? String(i).padStart(zeroPad + 1, "0") : i
-					}.${fileType}`,
-					index: i.toString(),
-				});
-			}
-			return srces;
-		}
-		setImageSources(createImageSources());
-	}, [
-		imagesBaseUrl,
-		imagesFiletype,
-		imagesCount,
-		imageFilenamePrefix,
-		zeroPad,
-		imageIndexSeparator,
-	]);
+	}, [autoplaySpeed, useAutoplay, incrementImageIndex]);
 
 	const onMouseDown = (e: React.MouseEvent) => {
 		setInitialMousePosition(e.clientX);
@@ -214,7 +177,7 @@ export const React360Viewer = ({
 		const imageIndexWithOffset = (start: number, offset: number) => {
 			const index = moduloWithoutNegative(
 				start + (reverse ? -1 : 1) * Math.floor(offset),
-				imagesCount,
+				imageSources.length,
 			);
 			setSelectedImageIndex(index);
 		};
@@ -225,7 +188,7 @@ export const React360Viewer = ({
 		// as well as proportionate to the size of the image.
 		const scaleFactor = 100;
 		const speedFactor =
-			(1 / mouseDragSpeed) * ((imagesCount * width) / scaleFactor);
+			(1 / mouseDragSpeed) * ((imageSources.length * width) / scaleFactor);
 		const changeInX = currentMousePosition - initialMousePosition;
 
 		const difference = changeInX / speedFactor;
@@ -233,7 +196,7 @@ export const React360Viewer = ({
 		imageIndexWithOffset(startingImageIndexOnPointerDown, difference);
 	}, [
 		currentMousePosition,
-		imagesCount,
+		imageSources.length,
 		startingImageIndexOnPointerDown,
 		initialMousePosition,
 		isScrolling,
