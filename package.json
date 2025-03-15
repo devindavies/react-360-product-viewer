@@ -2,18 +2,19 @@
 	"name": "react-360-product-viewer",
 	"version": "0.4.0",
 	"description": "Showcase your products in this 360 viewer component.",
-	"main": "./dist/React360Viewer.js",
+	"main": "./dist/index.js",
 	"files": ["dist"],
 	"type": "module",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/React360Viewer.d.ts",
-				"default": "./dist/React360Viewer.js"
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
 			},
 			"require": {
-				"types": "./dist/React360Viewer.d.cts",
-				"default": "./dist/React360Viewer.cjs"
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
 			}
 		}
 	},
