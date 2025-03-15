@@ -1,11 +1,9 @@
 {
 	"name": "react-360-product-viewer",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"description": "Showcase your products in this 360 viewer component.",
 	"main": "./dist/index.js",
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -28,9 +26,7 @@
 		"deploy-storybook": "storybook-to-ghpages",
 		"prepare": "npm run build"
 	},
-	"keywords": [
-		"react"
-	],
+	"keywords": ["react"],
 	"author": "Devin Davies",
 	"license": "MIT",
 	"devDependencies": {
