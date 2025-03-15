@@ -15,8 +15,6 @@ export type ZeroPadRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export interface React360ViewerProps {
 	imageSources: { src: string; index: string }[];
 	imageIndexSeparator?: string;
-	imagesFiletype: string;
-	imageFilenamePrefix: string;
 	imageInitialIndex?: number;
 	mouseDragSpeed?: number;
 	autoplaySpeed?: number;
